@@ -1,37 +1,83 @@
+// ========================================
+// MY LIBRARY
+// ========================================
 
 const library = [
 
+    // ==============================
+    // SHOWS
+    // ==============================
+
     {
-        title: "Stranger Things",
+        id: "victorious",
+        title: "Victorious",
         type: "shows",
-        year: 2016,
+        year: 2010,
         rating: 10,
         poster: "",
         favorite: true
     },
 
     {
-        title: "The Batman",
-        type: "movies",
-        year: 2022,
+        id: "sam-and-cat",
+        title: "Sam & Cat",
+        type: "shows",
+        year: 2013,
+        rating: 10,
+        poster: "",
+        favorite: true
+    },
+
+    {
+        id: "game-shakers",
+        title: "Game Shakers",
+        type: "shows",
+        year: 2015,
         rating: 9,
         poster: "",
         favorite: true
     },
 
     {
-        title: "Wednesday",
+        id: "icarly",
+        title: "iCarly",
         type: "shows",
-        year: 2022,
-        rating: 9,
+        year: 2007,
+        rating: 10,
         poster: "",
-        favorite: false
+        favorite: true
     },
 
     {
-        title: "Spider-Man: No Way Home",
+        id: "henry-danger",
+        title: "Henry Danger",
+        type: "shows",
+        year: 2014,
+        rating: 10,
+        poster: "",
+        favorite: true
+    },
+
+
+    // ==============================
+    // MOVIES
+    // ==============================
+
+    {
+        id: "home-alone",
+        title: "Home Alone",
         type: "movies",
-        year: 2021,
+        year: 1990,
+        rating: 10,
+        poster: "",
+        favorite: true
+    },
+
+    {
+        id: "home-alone-2",
+        title: "Home Alone 2: Lost in New York",
+        type: "movies",
+        year: 1992,
         rating: 10,
         poster: "",
         favorite: true
@@ -40,8 +86,16 @@ const library = [
 ];
 
 
+// ========================================
+// CURRENT CATEGORY
+// ========================================
+
 let currentCategory = "all";
 
+
+// ========================================
+// DISPLAY LIBRARY
+// ========================================
 
 function displayLibrary(items) {
 
@@ -49,9 +103,34 @@ function displayLibrary(items) {
 
     libraryContainer.innerHTML = "";
 
-    document.getElementById("movie-count").textContent =
-        `${items.length} titles`;
 
+    // Update number of titles
+
+    document.getElementById("movie-count").textContent =
+        `${items.length} ${items.length === 1 ? "title" : "titles"}`;
+
+
+    // No results message
+
+    if (items.length === 0) {
+
+        libraryContainer.innerHTML = `
+            <div style="
+                grid-column: 1 / -1;
+                text-align: center;
+                padding: 60px 20px;
+                color: #777;
+                font-size: 18px;
+            ">
+                No titles found 🎬
+            </div>
+        `;
+
+        return;
+    }
+
+
+    // Create each card
 
     items.forEach(item => {
 
@@ -60,31 +139,74 @@ function displayLibrary(items) {
         card.className = "movie-card";
 
 
+        // Make the card clickable
+
+        card.onclick = function () {
+            openTitle(item.id);
+        };
+
+
+        // Poster
+
+        let posterHTML;
+
+        if (item.poster) {
+
+            posterHTML = `
+                <img
+                    src="${item.poster}"
+                    alt="${item.title}"
+                >
+            `;
+
+        } else {
+
+            posterHTML = `
+                <div style="
+                    width:100%;
+                    height:100%;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    background:linear-gradient(
+                        135deg,
+                        #191919,
+                        #292929
+                    );
+                    color:#666;
+                    font-size:45px;
+                ">
+                    ${item.type === "shows" ? "📺" : "🎬"}
+                </div>
+            `;
+
+        }
+
+
+        // Card HTML
+
         card.innerHTML = `
 
             <div class="poster">
 
-                ${
-                    item.poster
-                    ? `<img src="${item.poster}" alt="${item.title}">`
-                    : `<div style="
-                        height:100%;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        color:#555;
-                        font-size:40px;
-                    ">🎬</div>`
-                }
+                ${posterHTML}
 
             </div>
+
 
             <div class="movie-title">
+
                 ${item.title}
+
             </div>
 
+
             <div class="movie-info">
-                ${item.year} • ⭐ ${item.rating}/10
+
+                ${item.year}
+                •
+                ⭐ ${item.rating}/10
+
             </div>
 
         `;
@@ -97,6 +219,10 @@ function displayLibrary(items) {
 }
 
 
+// ========================================
+// SHOW CATEGORY
+// ========================================
+
 function showCategory(category) {
 
     currentCategory = category;
@@ -104,7 +230,19 @@ function showCategory(category) {
     let filtered = library;
 
 
-    if (category === "movies") {
+    // ALL
+
+    if (category === "all") {
+
+        document.getElementById("section-title").textContent =
+            "My Library";
+
+    }
+
+
+    // MOVIES
+
+    else if (category === "movies") {
 
         filtered = library.filter(item =>
             item.type === "movies"
@@ -115,6 +253,8 @@ function showCategory(category) {
 
     }
 
+
+    // SHOWS
 
     else if (category === "shows") {
 
@@ -128,10 +268,12 @@ function showCategory(category) {
     }
 
 
+    // FAVORITES
+
     else if (category === "favorites") {
 
         filtered = library.filter(item =>
-            item.favorite
+            item.favorite === true
         );
 
         document.getElementById("section-title").textContent =
@@ -140,29 +282,34 @@ function showCategory(category) {
     }
 
 
-    else {
-
-        document.getElementById("section-title").textContent =
-            "My Library";
-
-    }
-
+    // Display results
 
     displayLibrary(filtered);
 
 }
 
 
+// ========================================
+// SEARCH
+// ========================================
+
 function searchLibrary() {
 
-    const searchTerm =
-        document.getElementById("search").value.toLowerCase();
+    const searchInput =
+        document.getElementById("search");
 
+    const searchTerm =
+        searchInput.value.toLowerCase().trim();
+
+
+    // Search titles
 
     let filtered = library.filter(item =>
         item.title.toLowerCase().includes(searchTerm)
     );
 
+
+    // Keep current category active
 
     if (currentCategory === "movies") {
 
@@ -185,7 +332,7 @@ function searchLibrary() {
     if (currentCategory === "favorites") {
 
         filtered = filtered.filter(item =>
-            item.favorite
+            item.favorite === true
         );
 
     }
@@ -195,5 +342,42 @@ function searchLibrary() {
 
 }
 
+
+// ========================================
+// OPEN MOVIE / SHOW
+// ========================================
+
+function openTitle(id) {
+
+    const item = library.find(movie =>
+        movie.id === id
+    );
+
+
+    if (!item) {
+        return;
+    }
+
+
+    console.log("Selected:", item.title);
+
+
+    // For now we will show an alert.
+    // Later we will replace this with
+    // the actual movie/show page.
+
+    alert(
+        `${item.title}\n\n` +
+        `${item.type === "shows" ? "TV Show" : "Movie"}\n` +
+        `Year: ${item.year}\n` +
+        `Rating: ⭐ ${item.rating}/10`
+    );
+
+}
+
+
+// ========================================
+// INITIAL LOAD
+// ========================================
 
 displayLibrary(library);
