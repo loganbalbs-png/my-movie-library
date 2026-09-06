@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>My Library</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">MY<span>LIBRARY</span></div>
+
+        <nav>
+            <button onclick="showCategory('all')">Home</button>
+            <button onclick="showCategory('movies')">Movies</button>
+            <button onclick="showCategory('shows')">Shows</button>
+            <button onclick="showCategory('favorites')">❤️ Favorites</button>
+        </nav>
+
+        <div class="search-container">
+            <input
+                type="text"
+                id="search"
+                placeholder="Search..."
+                oninput="searchLibrary()"
+            >
+        </div>
+    </header>
+
+
+    <main>
+
+        <section class="hero">
+            <div class="hero-content">
+                <p class="hero-label">YOUR PERSONAL LIBRARY</p>
+
+                <h1>Watch what<br>you love.</h1>
+
+                <p class="hero-description">
+                    Your personal collection of movies and shows,
+                    all in one place.
+                </p>
+
+                <button class="browse-button" onclick="showCategory('all')">
+                    Browse Library
+                </button>
+            </div>
+        </section>
+
+
+        <section class="library-section">
+
+            <div class="section-header">
+                <h2 id="section-title">My Library</h2>
+                <span id="movie-count"></span>
+            </div>
+
+            <div id="library" class="movie-grid"></div>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
